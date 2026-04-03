@@ -1,0 +1,289 @@
+@baseUrl = http://localhost:5000
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywidXNlcm5hbWUiOiJhZG1pbiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc3NTI1MDQ5NywiZXhwIjoxNzc1MjU0MDk3fQ.YFhpEHijQ1VSnmOhbS2NkIBneTQGe7RkkF2AUTGkAzk
+
+### 1. Test serveur
+GET {{baseUrl}}/
+
+
+### 2. Inscription (rôle lecteur par défaut)
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+  "username": "solange",
+  "email": "solange@test.com",
+  "password": "123456"
+}
+
+###
+
+### 3. Inscription auteur
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+  "username": "alice",
+  "email": "alice@test.com",
+  "password": "123456",
+  "role": "auteur"
+}
+
+
+###
+
+### 4. Login
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "solange@test.com",
+  "password": "123456"
+}
+
+###
+
+### 5. Login auteur
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "alice@test.com",
+  "password": "123456"
+}
+
+###
+
+### Login admin
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@test.com",
+  "password": "123456"
+}
+
+###
+
+### 6. Voir mon profil (connecté)
+GET {{baseUrl}}/auth/profile
+Authorization: Bearer {{token}}
+
+###
+
+### 7. Modifier mon profil
+PUT {{baseUrl}}/auth/profile
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "bio": "Je suis l'administratrice du blog. J'adore partager des articles sur la technologie et la science."
+}
+
+###
+
+### 8. Demander reset mot de passe
+POST {{baseUrl}}/auth/forgot-password
+Content-Type: application/json
+
+{
+  "email": "solange@test.com"
+}
+
+###
+
+### 9. Reset mot de passe (remplace RESET_TOKEN par le token reçu au step 8)
+POST {{baseUrl}}/auth/reset-password
+Content-Type: application/json
+
+{
+  "token": "779d7b5c411b0f50f2497c44447a06d91abd299432a52ecef36f3ef71787a7b2",
+  "new_password": "123456"
+}
+
+
+
+### 10. Récupérer toutes les catégories
+GET {{baseUrl}}/categories
+
+###
+
+### 11. Créer une catégorie (admin uniquement)
+POST {{baseUrl}}/categories
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "name": "Technologie"
+}
+
+###
+
+### 12. Créer une 2e catégorie
+POST {{baseUrl}}/categories
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "name": "Science"
+}
+
+
+### 13. Récupérer tous les tags
+GET {{baseUrl}}/tags
+
+###
+
+### 14. Créer un tag (admin uniquement)
+POST {{baseUrl}}/tags
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "name": "nodejs"
+}
+
+###
+
+### 15. Créer un 2e tag
+POST {{baseUrl}}/tags
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "name": "javascript"
+}
+
+
+### 16. Récupérer tous les articles
+GET {{baseUrl}}/articles
+
+###
+
+### 17. Filtrer par statut
+GET {{baseUrl}}/articles?statut=publie
+
+###
+
+### 18. Filtrer par catégorie
+GET {{baseUrl}}/articles?categorie_id=1
+
+###
+
+### 19. Recherche par mot-clé
+GET {{baseUrl}}/articles?search=node
+
+###
+
+### 20. Récupérer un article par ID (incrémente les vues)
+GET {{baseUrl}}/articles/1
+
+###
+
+### 21. Créer un article (auteur/admin, token requis)
+POST {{baseUrl}}/articles
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "titre": "Introduction à Node.js",
+  "auteur": "alice",
+  "contenu": "Node.js est un environnement d'exécution JavaScript côté serveur basé sur le moteur V8.",
+  "categorie_id": 1,
+  "statut": "publie",
+  "tags": "nodejs,javascript"
+}
+
+###
+
+### 22. Créer un article en brouillon
+POST {{baseUrl}}/articles
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "titre": "Mon brouillon",
+  "auteur": "alice",
+  "contenu": "Contenu en cours de rédaction...",
+  "categorie_id": 1,
+  "statut": "brouillon"
+}
+
+###
+
+### 23. Modifier un article
+PUT {{baseUrl}}/articles/1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "titre": "Introduction à Node.js (mise à jour)",
+  "auteur": "alice",
+  "contenu": "Contenu mis à jour avec de nouveaux exemples.",
+  "categorie_id": 1,
+  "statut": "publié",
+  "tags": "nodejs,javascript,api"
+}
+
+###
+
+### 24. Supprimer un article
+DELETE {{baseUrl}}/articles/1
+Authorization: Bearer {{token}}
+
+###
+
+### 25. Articles similaires
+GET {{baseUrl}}/articles/1/related
+
+
+### 26. Liker / unliker un article (toggle)
+POST {{baseUrl}}/articles/3/like
+Authorization: Bearer {{token}}
+
+
+### 27. Sauvegarder / retirer des favoris (toggle)
+POST {{baseUrl}}/articles/1/save
+Authorization: Bearer {{token}}
+
+###
+
+### 28. Voir mes favoris
+GET {{baseUrl}}/favoris
+Authorization: Bearer {{token}}
+
+
+### 29. Récupérer les commentaires d'un article
+GET {{baseUrl}}/comments/article/1
+
+###
+
+### 30. Ajouter un commentaire (connecté)
+POST {{baseUrl}}/comments
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "auteur": "test",
+  "contenu": "Super article, très instructif !",
+  "article_id": 1
+}
+
+###
+
+### 31. Répondre à un commentaire (parent_id = ID du commentaire parent)
+POST {{baseUrl}}/comments
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "auteur": "test",
+  "contenu": "Merci pour ce retour !",
+  "article_id": 1,
+  "parent_id": 1
+}
+
+###
+
+### 32. Supprimer un commentaire (admin uniquement)
+DELETE {{baseUrl}}/comments/3
+Authorization: Bearer {{token}}
