@@ -57,8 +57,8 @@ Puis éditer `.env` avec tes valeurs :
 DB_HOST=localhost
 DB_USER=root
 DB_PASSWORD=ton_mot_de_passe
-DB_NAME=blog_api
-JWT_SECRET=une_cle_secrete_longue
+DB_NAME=
+JWT_SECRET=
 PORT=5000
 CLIENT_URL=http://localhost:3000
 ```
